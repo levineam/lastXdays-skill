@@ -14,31 +14,23 @@ Research a topic across Reddit and X, internalize the best practices, then write
 
 ## CRITICAL: Parse User Intent
 
-Before doing anything, parse the user's input for TWO things:
+Before doing anything, parse the user's input for:
 
 1. **TOPIC**: What they want to learn about (e.g., "web app mockups", "Claude Code skills", "image generation")
-2. **TARGET TOOL**: Where they'll use the prompts (e.g., "Nano Banana Pro", "ChatGPT", "Claude", "Midjourney")
+2. **TARGET TOOL** (if specified): Where they'll use the prompts (e.g., "Nano Banana Pro", "ChatGPT", "Midjourney")
 
 Common patterns:
-- `[topic] for [tool]` → "web mockups for Nano Banana Pro"
-- `[topic] prompts for [tool]` → "UI design prompts for Midjourney"
-- `[tool] [topic]` → "Nano Banana Pro dashboard mockups"
-- Just `[topic]` → Ask follow-up
+- `[topic] for [tool]` → "web mockups for Nano Banana Pro" → TOOL IS SPECIFIED
+- `[topic] prompts for [tool]` → "UI design prompts for Midjourney" → TOOL IS SPECIFIED
+- Just `[topic]` → "iOS design mockups" → TOOL NOT SPECIFIED, that's OK
 
-**If TARGET TOOL is unclear**, use AskUserQuestion:
-```
-What tool will you use these prompts with?
+**IMPORTANT: Do NOT ask about target tool before research.**
+- If tool is specified in the query, use it
+- If tool is NOT specified, run research first, then ask AFTER showing results
 
-Options:
-1. Nano Banana Pro (image generation)
-2. ChatGPT / Claude (text/code)
-3. Midjourney / DALL-E (image generation)
-4. Other (tell me)
-```
-
-**Store these values mentally** - you'll need them for the entire conversation:
+**Store the TOPIC** - you'll extract or ask about TARGET_TOOL later:
 - `TOPIC = [extracted topic]`
-- `TARGET_TOOL = [extracted tool]`
+- `TARGET_TOOL = [extracted tool, or "unknown" if not specified]`
 
 ---
 
@@ -134,12 +126,23 @@ Analyzed {total_sources} sources from the last 30 days
 └─ Top voices: r/{sub1}, r/{sub2}, @{handle1}, @{handle2}
 
 ---
-Share your vision for what you want to create and I'll write a thoughtful prompt you can copy-paste directly into {TARGET_TOOL}.
+Share your vision for what you want to create and I'll write a thoughtful prompt you can copy-paste directly into {TARGET_TOOL or "your tool of choice"}.
 ```
 
 **Use real numbers from the research output.** The patterns should be actual insights from the research, not generic advice.
 
 **SELF-CHECK before displaying**: Re-read your "What I learned" section. Does it match what the research ACTUALLY says? If the research was about ClawdBot (a self-hosted AI agent), your summary should be about ClawdBot, not Claude Code. If you catch yourself projecting your own knowledge instead of the research, rewrite it.
+
+**IF TARGET_TOOL is still unknown after showing results**, ask NOW (not before research):
+```
+What tool will you use these prompts with?
+
+Options:
+1. [Most relevant tool based on research - e.g., if research mentioned Figma/Sketch, offer those]
+2. Nano Banana Pro (image generation)
+3. ChatGPT / Claude (text/code)
+4. Other (tell me)
+```
 
 **IMPORTANT**: After displaying this, WAIT for the user to respond. Don't dump generic prompts.
 
