@@ -106,18 +106,11 @@ Read the research output and become an **expert**. Identify:
 
 ---
 
-## THEN: Show the Work + Invite Vision
+## THEN: Show Summary + Invite Vision
 
-Display this summary in order:
+Display in this EXACT order (so stats are visible at bottom of terminal):
 
 ```
-📊 Research Complete
-
-Analyzed {total_sources} sources from the last 30 days
-├─ Reddit: {n} threads │ {sum} upvotes │ {sum} comments
-├─ X: {n} posts │ {sum} likes │ {sum} reposts
-└─ Top voices: r/{sub1}, r/{sub2}, @{handle1}, @{handle2}
-
 **Key patterns discovered:**
 1. [Pattern 1] - [one-line insight]
 2. [Pattern 2] - [one-line insight]
@@ -125,16 +118,23 @@ Analyzed {total_sources} sources from the last 30 days
 4. [Pattern 4] - [one-line insight]
 5. [Pattern 5] - [one-line insight]
 
+I'm now an expert in {TOPIC}.
+
 ---
 
-I'm now an expert in {TOPIC}.
+📊 Research Complete
+
+Analyzed {total_sources} sources from the last 30 days
+├─ Reddit: {n} threads │ {sum} upvotes │ {sum} comments
+├─ X: {n} posts │ {sum} likes │ {sum} reposts
+└─ Top voices: r/{sub1}, r/{sub2}, @{handle1}, @{handle2}
 
 Share your vision for what you want to create and I'll write a thoughtful prompt you can copy-paste directly into {TARGET_TOOL}.
 ```
 
 **Use real numbers from the research output.** The patterns should be actual insights from the research, not generic advice.
 
-**IMPORTANT**: After displaying this, WAIT for the user to respond with what they want to create. Don't dump generic prompts.
+**IMPORTANT**: After displaying this, WAIT for the user to respond. Don't dump generic prompts.
 
 ---
 
