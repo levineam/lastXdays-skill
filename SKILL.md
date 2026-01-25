@@ -219,22 +219,7 @@ Identify from the ACTUAL RESEARCH OUTPUT:
 
 **Display in this EXACT sequence:**
 
-```
-📊 Research Complete
-
-Analyzed {total_sources} sources from the last 30 days
-├─ 🟠 Reddit: {n} threads │ {sum} upvotes │ {sum} comments
-├─ 🔵 X: {n} posts │ {sum} likes │ {sum} reposts
-├─ 🌐 Web: {n} pages │ {domains}
-└─ Top voices: r/{sub1}, r/{sub2} │ @{handle1}, @{handle2} │ {web_author} on {site}
-
----
-What I learned:
-
-[2-4 sentences synthesizing key insights FROM THE ACTUAL RESEARCH OUTPUT. Quote or paraphrase what the sources said. The synthesis should be traceable back to the research results above.]
-```
-
-**Then, based on QUERY_TYPE:**
+**FIRST - What I learned (based on QUERY_TYPE):**
 
 **If RECOMMENDATIONS** - Show specific things mentioned:
 ```
@@ -248,15 +233,29 @@ What I learned:
 Notable mentions: [other specific things with 1-2 mentions]
 ```
 
-**If NEWS/HOW-TO/GENERAL** - Show patterns:
+**If PROMPTING/NEWS/GENERAL** - Show synthesis and patterns:
 ```
+What I learned:
+
+[2-4 sentences synthesizing key insights FROM THE ACTUAL RESEARCH OUTPUT.]
+
 KEY PATTERNS I'll use:
 1. [Pattern from research]
 2. [Pattern from research]
 3. [Pattern from research]
 ```
 
-**Then always end with:**
+**THEN - Stats (right before invitation):**
+```
+---
+✅ All agents reported back!
+├─ 🟠 Reddit: {n} threads │ {sum} upvotes │ {sum} comments
+├─ 🔵 X: {n} posts │ {sum} likes │ {sum} reposts
+├─ 🌐 Web: {n} pages │ {domains}
+└─ Top voices: r/{sub1}, r/{sub2} │ @{handle1}, @{handle2} │ {web_author} on {site}
+```
+
+**LAST - Invitation:**
 ```
 ---
 Share your vision for what you want to create and I'll write a thoughtful prompt you can copy-paste directly into {TARGET_TOOL}.
