@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 """
-last30days - Research a topic from the last 30 days on Reddit + X.
+lastXdays - Research a topic from the last X days on Reddit + X.
 
 Usage:
-    python3 last30days.py <topic> [options]
+    python3 lastXdays.py <days> <topic> [options]
+    python3 lastXdays.py <topic> [options]  (defaults to 30 days)
+
+Examples:
+    python3 lastXdays.py 7 "AI tools"
+    python3 lastXdays.py 14 "Claude Code skills"
+    python3 lastXdays.py "best prompts"  (uses 30 days)
 
 Options:
     --mock              Use fixtures instead of real API calls
@@ -276,9 +282,14 @@ def run_research(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Research a topic from the last 30 days on Reddit + X"
+        description="Research a topic from the last X days on Reddit + X",
+        epilog="Examples:\n"
+               "  python3 lastXdays.py 7 \"AI tools\"\n"
+               "  python3 lastXdays.py \"best prompts\" (uses 30 days)\n"
+               "  python3 lastXdays.py 14 \"Claude Code skills\"",
+        formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("topic", nargs="?", help="Topic to research")
+    parser.add_argument("args", nargs="*", help="[days] topic or just topic (defaults to 30 days)")
     parser.add_argument("--mock", action="store_true", help="Use fixtures")
     parser.add_argument(
         "--emit",
@@ -313,7 +324,68 @@ def main():
         help="Include general web search alongside Reddit/X (lower weighted)",
     )
 
-    args = parser.parse_args()
+    parsed_args = parser.parse_args()
+    
+    # Parse positional arguments to extract days and topic
+    if not parsed_args.args:
+        print("Error: Please provide a topic to research.", file=sys.stderr)
+        print("Usage: python3 lastXdays.py [days] <topic> [options]", file=sys.stderr)
+        print("Examples:", file=sys.stderr)
+        print("  python3 lastXdays.py 7 \"AI tools\"", file=sys.stderr)
+        print("  python3 lastXdays.py \"best prompts\" (uses 30 days)", file=sys.stderr)
+        sys.exit(1)
+    
+    # Try to parse first argument as days
+    days = 30  # default
+    topic = None
+    
+    if len(parsed_args.args) == 1:
+        # Single argument - could be days or topic
+        first_arg = parsed_args.args[0]
+        try:
+            days = int(first_arg)
+            if days <= 0:
+                raise ValueError("Days must be positive")
+            # If we successfully parsed days but have no topic, error
+            print("Error: Please provide a topic to research.", file=sys.stderr)
+            print(f"Usage: python3 lastXdays.py {days} <topic> [options]", file=sys.stderr)
+            sys.exit(1)
+        except ValueError:
+            # Not a number, treat as topic with default days
+            topic = first_arg
+            days = 30
+    elif len(parsed_args.args) >= 2:
+        # Multiple arguments - first could be days
+        try:
+            days = int(parsed_args.args[0])
+            if days <= 0:
+                raise ValueError("Days must be positive")
+            # Join remaining arguments as topic
+            topic = " ".join(parsed_args.args[1:])
+        except ValueError:
+            # First arg is not a number, treat all as topic
+            topic = " ".join(parsed_args.args)
+            days = 30
+    
+    # Validate days range
+    if days > 365:
+        print("Error: Maximum days is 365.", file=sys.stderr)
+        sys.exit(1)
+    
+    # Create an args object compatible with the rest of the code
+    class Args:
+        pass
+    
+    args = Args()
+    args.topic = topic
+    args.days = days
+    args.mock = parsed_args.mock
+    args.emit = parsed_args.emit
+    args.sources = parsed_args.sources
+    args.quick = parsed_args.quick
+    args.deep = parsed_args.deep
+    args.debug = parsed_args.debug
+    args.include_web = parsed_args.include_web
 
     # Enable debug logging if requested
     if args.debug:
@@ -335,7 +407,7 @@ def main():
 
     if not args.topic:
         print("Error: Please provide a topic to research.", file=sys.stderr)
-        print("Usage: python3 last30days.py <topic> [options]", file=sys.stderr)
+        print("Usage: python3 lastXdays.py [days] <topic> [options]", file=sys.stderr)
         sys.exit(1)
 
     # Load config
@@ -361,8 +433,8 @@ def main():
                 print(f"Error: {error}", file=sys.stderr)
                 sys.exit(1)
 
-    # Get date range
-    from_date, to_date = dates.get_date_range(30)
+    # Get date range using the specified days
+    from_date, to_date = dates.get_date_range(args.days)
 
     # Check what keys are missing for promo messaging
     missing_keys = env.get_missing_keys(config)
@@ -475,7 +547,7 @@ def main():
         progress.show_complete(len(deduped_reddit), len(deduped_x))
 
     # Output result
-    output_result(report, args.emit, web_needed, args.topic, from_date, to_date, missing_keys)
+    output_result(report, args.emit, web_needed, args.topic, from_date, to_date, missing_keys, args.days)
 
 
 def output_result(
@@ -486,6 +558,7 @@ def output_result(
     from_date: str = "",
     to_date: str = "",
     missing_keys: str = "none",
+    days: int = 30,
 ):
     """Output the result based on emit mode."""
     if emit_mode == "compact":
@@ -509,7 +582,7 @@ def output_result(
         print("")
         print("Claude: Use your WebSearch tool to find 8-15 relevant web pages.")
         print("EXCLUDE: reddit.com, x.com, twitter.com (already covered above)")
-        print("INCLUDE: blogs, docs, news, tutorials from the last 30 days")
+        print(f"INCLUDE: blogs, docs, news, tutorials from the last {days} days")
         print("")
         print("After searching, synthesize WebSearch results WITH the Reddit/X")
         print("results above. WebSearch items should rank LOWER than comparable")
