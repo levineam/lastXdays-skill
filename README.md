@@ -102,10 +102,4 @@ All credit for the foundational research architecture goes to the original last3
 
 ## License
 
-MIT License - Same as the original last30days-skill.
-
----
-
-**30 days of research. 30 seconds of work. Now with any time range you need.**
-
-*For prompt research. Trend discovery. Expert answers.*
+MIT License
