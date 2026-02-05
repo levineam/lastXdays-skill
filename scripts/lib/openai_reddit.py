@@ -7,8 +7,9 @@ from typing import Any, Dict, List, Optional
 
 from . import http
 
-# Fallback models when the selected model isn't accessible (e.g., org not verified for GPT-5)
-MODEL_FALLBACK_ORDER = ["gpt-4.1", "gpt-4o", "gpt-4o-mini"]
+# Default and fallback models when the selected model isn't accessible (e.g., org not verified for GPT-5)
+DEFAULT_MODEL = "gpt-5.1"
+MODEL_FALLBACK_ORDER = ["gpt-5.1", "gpt-4.1", "gpt-4o"]
 
 
 def _log_error(msg: str):
